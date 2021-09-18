@@ -1,0 +1,33 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+#Read data
+df=pd.read_csv('E:/courses/python/Refactored_Py_DS_ML_Bootcamp-master/13-Logistic-Regression/advertising.csv')
+df.head()
+df.info()
+df.describe()
+
+#Visulaization:
+sns.distplot(df['Age'],kde=False, bins=30)
+sns.pairplot(data=df,hue="Clicked on Ad")
+
+#Split data
+from sklearn.model_selection import train_test_split
+y=df["Clicked on Ad"]
+X=df.drop(["Clicked on Ad",'Ad Topic Line','Timestamp','City','Country'],axis=1)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=101)
+
+#Fit regression model
+from sklearn.linear_model import LogisticRegression
+logmodel=LogisticRegression()
+logmodel.fit(X_train,y_train)
+pred=logmodel.predict(X_test)
+
+#Model evaluation
+from sklearn.metrics import confusion_matrix , classification_report
+print(classification_report(y_test,pred))
+print(confusion_matrix(y_test,pred))
